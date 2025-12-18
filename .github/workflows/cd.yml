@@ -1,0 +1,42 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches: [main, master]
+
+jobs:
+  deploy:
+    name: CD
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Server via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            export PGUSER=developer 
+            export PGDATABASE=forumapi 
+            export PGPASSWORD=supersecretpassword
+            export HOST=localhost
+            export PORT=5000
+            export ACCESS_TOKEN_KEY=${{ secrets.ACCESS_TOKEN_KEY }}
+            export REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}
+            
+            cd ~/app 
+            git pull origin main
+            
+            npm install --omit=dev
+            npm install node-pg-migrate@8.0.3
+            npm run migrate
+            
+            sudo cp ~/app/nginx.conf /etc/nginx/nginx.conf
+            
+            sudo systemctl restart nginx
+            
+            pm2 delete forum-api || true
+            pm2 start ecosystem.config.js 
+            pm2 save
