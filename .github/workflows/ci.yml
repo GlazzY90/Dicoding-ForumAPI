@@ -47,7 +47,7 @@ jobs:
           echo "REFRESH_TOKEN_KEY=${{ secrets.REFRESH_TOKEN_KEY }}" >> $GITHUB_ENV
           echo "ACCESS_TOKEN_AGE=3000" >> $GITHUB_ENV
       - name: Run Database Migration
-        run: npm run migrate:test
+        run: npx node-pg-migrate up
 
       - name: Run All Tests
         run: npm test
