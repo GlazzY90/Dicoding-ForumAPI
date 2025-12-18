@@ -1,0 +1,36 @@
+{
+  "name": "proyek-2",
+  "version": "2.0.0",
+  "description": "Forum API CI/CD",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "start:dev": "nodemon src/app.js",
+    "test": "jest --setupFiles dotenv/config -i",
+    "test:watch:change": "jest --watch --setupFiles dotenv/config -i",
+    "test:watch": "jest --watchAll --coverage --setupFiles dotenv/config -i",
+    "migrate": "node-pg-migrate up",
+    "migrate:reset": "node-pg-migrate down -r all",
+    "migrate:test": "node-pg-migrate up -f config/database/test.json"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@hapi/hapi": "^21.4.3",
+    "@hapi/jwt": "^3.2.1",
+    "bcrypt": "^6.0.0",
+    "dotenv": "^16.4.5",
+    "instances-container": "^2.0.6",
+    "nanoid": "^3.3.7", 
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "eslint": "^9.35.0",
+    "jest": "^30.1.3",
+    "node-pg-migrate": "^8.0.3",
+    "nodemon": "^3.1.10"
+  }
+}
