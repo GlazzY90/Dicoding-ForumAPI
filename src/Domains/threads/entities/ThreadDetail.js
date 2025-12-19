@@ -5,7 +5,7 @@ class ThreadDetail {
     this.id = id;
     this.title = title;
     this.body = body;
-    this.date = date;
+    this.date = date instanceof Date ? date.toISOString() : date;
     this.username = username;
     this.comments = comments;
   }
@@ -14,15 +14,16 @@ class ThreadDetail {
     if (!id || !title || !body || !date || !username || !comments) {
       throw new Error("THREAD_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY");
     }
+    const isDateValid = typeof date === 'string' || date instanceof Date;
     if (
-      typeof id !== "string" ||
-      typeof title !== "string" ||
-      typeof body !== "string" ||
-      typeof date !== "string" ||
-      typeof username !== "string" ||
+      typeof id !== 'string' ||
+      typeof title !== 'string' ||
+      typeof body !== 'string' ||
+      !isDateValid ||
+      typeof username !== 'string' ||
       !Array.isArray(comments)
     ) {
-      throw new Error("THREAD_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION");
+      throw new Error('THREAD_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
     }
   }
 }

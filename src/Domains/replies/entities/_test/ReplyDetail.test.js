@@ -28,20 +28,39 @@ describe('ReplyDetail', () => {
 
   it('should create ReplyDetail object correctly', () => {
     // Arrange
+    const now = new Date();
+    const payload = {
+      id: 'reply-123',
+      username: 'dicoding',
+      date: now,
+      content: 'sebuah balasan',
+      is_delete: false,
+    };
+
+    // Action
+    const { id, username, date, content } = new ReplyDetail(payload);
+
+    // Assert
+    expect(id).toEqual(payload.id);
+    expect(username).toEqual(payload.username);
+    expect(date).toEqual(now.toISOString());
+    expect(content).toEqual(payload.content);
+  });
+
+  it('should create deleted ReplyDetail object correctly', () => {
+    // Arrange
     const payload = {
       id: 'reply-123',
       username: 'dicoding',
       date: '2021-08-08T07:19:09.775Z',
       content: 'sebuah balasan',
+      is_delete: true, // Deleted status
     };
 
     // Action
-    const replyDetail = new ReplyDetail(payload);
+    const { content } = new ReplyDetail(payload);
 
     // Assert
-    expect(replyDetail.id).toEqual(payload.id);
-    expect(replyDetail.username).toEqual(payload.username);
-    expect(replyDetail.date).toEqual(payload.date);
-    expect(replyDetail.content).toEqual(payload.content);
+    expect(content).toEqual('**balasan telah dihapus**');
   });
 });

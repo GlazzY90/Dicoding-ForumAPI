@@ -1,3 +1,7 @@
+const CommentDetail = require('../../Domains/comments/entities/CommentDetail');
+const ReplyDetail = require('../../Domains/replies/entities/ReplyDetail');
+const ThreadDetail = require('../../Domains/threads/entities/ThreadDetail');y
+
 class GetThreadDetailUseCase {
   constructor({ threadRepository, commentRepository, replyRepository }) {
     this._threadRepository = threadRepository;
@@ -8,34 +12,28 @@ class GetThreadDetailUseCase {
   async execute(useCasePayload) {
     const { threadId } = useCasePayload;
     const thread = await this._threadRepository.getThreadDetailById(threadId);
-    const comments = await this._commentRepository.getCommentsByThreadId(
-      threadId
-    );
-    const commentsWithReplies = await Promise.all(
+    const comments = await this._commentRepository.getCommentsByThreadId(threadId);
+
+    // Iterasi setiap comment untuk mengambil replies-nya
+    const commentsDetail = await Promise.all(
       comments.map(async (comment) => {
-        const replies = await this._replyRepository.getRepliesByCommentId(
-          comment.id
-        );
-        const formattedReplies = replies.map((reply) => ({
-          id: reply.id,
-          content: reply.is_delete
-            ? "**balasan telah dihapus**"
-            : reply.content,
-          date: reply.date,
-          username: reply.username,
-        }));
-        return {
-          id: comment.id,
-          username: comment.username,
-          date: comment.date,
-          content: comment.is_delete
-            ? "**komentar telah dihapus**"
-            : comment.content,
-          replies: formattedReplies,
-        };
+        const replies = await this._replyRepository.getRepliesByCommentId(comment.id);
+        
+        // Mapping replies menjadi entity ReplyDetail
+        const repliesDetail = replies.map((reply) => new ReplyDetail(reply));
+
+        // Mapping comment menjadi entity CommentDetail
+        return new CommentDetail({
+          ...comment,
+          replies: repliesDetail,
+        });
       })
     );
-    return { ...thread, comments: commentsWithReplies };
+
+    return new ThreadDetail({
+      ...thread,
+      comments: commentsDetail,
+    });
   }
 }
 

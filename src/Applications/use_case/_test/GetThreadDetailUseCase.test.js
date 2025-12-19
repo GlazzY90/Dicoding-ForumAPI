@@ -73,7 +73,7 @@ describe('GetThreadDetailUseCase', () => {
     const threadDetail = await getThreadDetailUseCase.execute(useCasePayload);
 
     // Assert
-    expect(threadDetail).toStrictEqual({
+    expect(threadDetail).toEqual({
       ...mockThread,
       comments: [
         {
