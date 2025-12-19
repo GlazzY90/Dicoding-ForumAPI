@@ -9,7 +9,7 @@ describe('CommentDetail', () => {
     };
 
     // Action & Assert
-    expect(() => new CommentDetail(payload)).toThrowError('COMMENT_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY');
+    expect(() => new CommentDetail(payload)).toThrow('COMMENT_DETAIL.NOT_CONTAIN_NEEDED_PROPERTY');
   });
 
   it('should throw error when payload did not meet data type specification', () => {
@@ -22,7 +22,7 @@ describe('CommentDetail', () => {
     };
 
     // Action & Assert
-    expect(() => new CommentDetail(payload)).toThrowError('COMMENT_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
+    expect(() => new CommentDetail(payload)).toThrow('COMMENT_DETAIL.NOT_MEET_DATA_TYPE_SPECIFICATION');
   });
 
   it('should create CommentDetail object correctly', () => {
